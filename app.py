@@ -51,8 +51,16 @@ def yearly_pictures():
     c_timestamp = datetime.now()
     context = dict()
     if request.method == 'POST':
-        ts_from = datetime.strptime(request.form.get('from'), TIME_FORMAT)
-        ts_until = datetime.strptime(request.form.get('until'), TIME_FORMAT)
+        # Try to convert the use-input to timestamps, if not successfull use the default timestamps
+        try:
+            ts_from = datetime.strptime(request.form.get('from'), TIME_FORMAT)
+        except:
+            ts_from = c_timestamp-TIME_DELTA
+        try:
+            ts_until = datetime.strptime(
+                request.form.get('until'), TIME_FORMAT)
+        except:
+            ts_until = c_timestamp
     else:
         ts_from = c_timestamp-TIME_DELTA
         ts_until = c_timestamp
