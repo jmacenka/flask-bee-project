@@ -48,7 +48,7 @@ def yearly_pictures():
     context = dict()
     context['timestamp'] = str(datetime.now())
     context['pictures'] = [{'name': f, 'time': str(datetime.fromtimestamp(
-        int(f.split('_')[0])))} for f in os.listdir('./static')]
+        int(f.split('_')[0])))} for f in os.listdir(os.path.join(os.getcwd(), 'static'))]
     return render_template('pictures.html', **context)
 
 
