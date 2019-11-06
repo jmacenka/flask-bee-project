@@ -45,6 +45,7 @@ def api_root():
 
 @app.route('/pictures', methods=['GET'])
 def yearly_pictures():
+    create_new_folder(storage_path)
     context = dict()
     context['timestamp'] = str(datetime.now())
     context['pictures'] = [{'name': f, 'time': str(datetime.fromtimestamp(

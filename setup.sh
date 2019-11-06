@@ -1,3 +1,4 @@
+# !bin/bash
 # Setupscript to pull, build and deploy a Dockerized app straight from github
 # Requires GIT and Docker to be installed on the host-system
 # By Jan Macenka (2019-07-19)
