@@ -1,0 +1,9 @@
+static
+static/
+env
+.vscode
+__pycache__
+*.log
+*.jpg
+*.jpeg
+*.jpynb
