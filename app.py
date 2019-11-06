@@ -1,7 +1,7 @@
 from flask import Flask, url_for, request, render_template
 import os
 import logging
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from datetime import datetime
 from time import time
 
