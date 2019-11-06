@@ -1,11 +1,9 @@
 # Setupscript to pull, build and deploy a Dockerized app straight from github
 # Requires GIT and Docker to be installed on the host-system
 # By Jan Macenka (2019-07-19)
-
 # Specify your project-parameters
 PROJECT_GIT=jmacenka/flask-bee-project # Specify the github-path to the project e.g. user/project will lead to https://github.com/user/project.git
 PROJECT_PORT=5000 # Speficy which port of the project shal be exposed to port 80
-
 # Check if app folder already exists, if so just rebuild and redeploy the container
 if [ -e ./.git ]; then
     echo "Now: Repository already locally cloned, stoping all running containers"
