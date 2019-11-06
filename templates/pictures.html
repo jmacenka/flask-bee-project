@@ -30,13 +30,20 @@
   </head>
 
   <body>
-    <h1>Here are all the avaliable Pictures for {{ timestamp | safe }}</h1>
+    <h1>Select time-span to display</h1>
+    <form method="POST">
+      <label for="from">From: </label>
+      <input type="text" name="from" id="from" value="{{ ts_from }}" /><br />
+      <label for="until">Until: </label>
+      <input type="text" name="until" id="until" value="{{ ts_until }}" /><br />
+      <input type="submit" value="show" />
+    </form>
+    <h1>Here are all the pictures between {{ ts_from }} and {{ ts_until }}</h1>
     {% if pictures %} {% for picture in pictures %}
     <div class="gallery">
       <a target="_blank" href="{{ url_for('static', filename=picture.name) }}">
         <img
           src="{{ url_for('static', filename=picture.name) }}"
-          alt="2"
           width="20%"
           height="auto"
         />
@@ -44,7 +51,7 @@
       <div class="desc">{{ picture.time }}</div>
     </div>
     {% endfor %} {% else %}
-    <h2>None were found for the selected day.</h2>
+    <h2>None were found for the selected time-span.</h2>
     {% endif %}
   </body>
 </html>

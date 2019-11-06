@@ -2,7 +2,7 @@ from flask import Flask, url_for, request, render_template
 import os
 import logging
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 
 app = Flask(__name__)
@@ -12,8 +12,10 @@ app.logger.setLevel(logging.INFO)
 
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 STATIC_FOLDER = 'static'
-app.config['STATIC_FOLDER'] = STATIC_FOLDER
 UPLOAD_FOLDER = os.path.join(PROJECT_HOME, STATIC_FOLDER)
+TIME_DELTA = timedelta(hours=1)
+TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+app.config['STATIC_FOLDER'] = STATIC_FOLDER
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -43,15 +45,30 @@ def api_root():
         return "not possible", 404
 
 
-@app.route('/pictures', methods=['GET'])
+@app.route('/pictures', methods=['POST', 'GET'])
 def yearly_pictures():
     create_new_folder(app.config['UPLOAD_FOLDER'])
+    c_timestamp = datetime.now()
     context = dict()
-    context['timestamp'] = str(datetime.now())
-    context['pictures'] = [{'name': f, 'time': str(datetime.fromtimestamp(
-        int(f.split('_')[0])))} for f in os.listdir(os.path.join(os.getcwd(), 'static'))]
+    if request.method == 'POST':
+        ts_from = datetime.strptime(request.form.get('from'), TIME_FORMAT)
+        ts_until = datetime.strptime(request.form.get('until'), TIME_FORMAT)
+    else:
+        ts_from = c_timestamp-TIME_DELTA
+        ts_until = c_timestamp
+    context['ts_from'] = ts_from.strftime(TIME_FORMAT)
+    context['ts_until'] = ts_until.strftime(TIME_FORMAT)
+    context['timestamp'] = c_timestamp.strftime(TIME_FORMAT)
+    context['pictures'] = []
+    for file in os.listdir(os.path.join(os.getcwd(), 'static')):
+        str_ts_file, file_name = file.split('_')
+        dt = datetime.fromtimestamp(int(str_ts_file))
+        if dt >= ts_from and dt <= ts_until:
+            context['pictures'].append(
+                {'name': file, 'time': dt.strftime(TIME_FORMAT)})
+
     return render_template('pictures.html', **context)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False)
+    app.run(host='0.0.0.0', debug=True)
